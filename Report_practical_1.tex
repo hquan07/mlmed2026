@@ -1,22 +1,92 @@
 \documentclass[conference]{IEEEtran}
-
-\title{This is your report}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs} % For professional tables
 
 \begin{document}
 
+\title{ECG Signal Classification for Arrhythmia Detection using Random Forest}
+
+\author{\IEEEauthorblockN{Tran Huy Quan - 22BA13260}
+\textit{University of Science and Technology of Ha Noi}\\
+}
+
 \maketitle
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{abstract}
+Cardiovascular diseases are the leading cause of death globally. Early detection of cardiac abnormalities through Electrocardiogram (ECG) signals is crucial for effective treatment. This paper presents a machine learning approach to classify ECG signals into Normal and Abnormal categories using the PTB Diagnostic ECG Database. We employed a Random Forest classifier on a dataset containing 14,552 heartbeat samples. The experimental results demonstrate a high efficacy of the proposed model, achieving an overall accuracy of \textbf{97.05\%}. Significantly, the model exhibited a recall of \textbf{99\%} for the Abnormal class, minimizing the risk of missed diagnoses.
+\end{abstract}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{IEEEkeywords}
+ECG Classification, Machine Learning, Random Forest, Arrhythmia, PTB Database.
+\end{IEEEkeywords}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Introduction}
+The Electrocardiogram (ECG) is a non-invasive medical tool used to record the electrical activity of the heart over a period of time. Automated classification of these signals can assist medical professionals in rapidly diagnosing conditions such as myocardial infarction. In this study, we utilize the PTB Diagnostic ECG Database to distinguish between normal and abnormal heartbeats using a Random Forest ensemble method.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Dataset Description}
+The dataset consists of two categories of pre-processed heartbeat signals:
+\begin{itemize}
+    \item \textbf{Normal Class:} 4,046 samples.
+    \item \textbf{Abnormal Class:} 10,506 samples.
+\end{itemize}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Each sample represents a single heartbeat with 188 features. Fig. \ref{fig:ecg_signal} illustrates the difference between the average Normal and Abnormal ECG waveforms derived from the provided data. The Normal signal (blue) exhibits a characteristic QRS complex, while the Abnormal signal (red) shows distinct deviations typically associated with myocardial infarction.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+% --- FIGURE 1: ECG SIGNALS ---
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.9\linewidth]{average_ecg_signals.png}}
+\caption{Comparison of Average ECG Signals. The blue line represents the Normal heartbeat, while the red line represents the Abnormal heartbeat.}
+\label{fig:ecg_signal}
+\end{figure}
+% -----------------------------
+
+\section{Methodology}
+We employed a Random Forest Classifier with 100 estimators. The data was split into 80\% training and 20\% testing sets using stratified sampling to handle class imbalance. This ensures the model is trained on a representative distribution of both classes.
+
+\section{Experimental Results}
+
+\subsection{Performance Metrics}
+The model was evaluated on a test set of 2,911 samples. The results are summarized in Table \ref{tab:results}.
+
+\begin{table}[htbp]
+\caption{Performance Results}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\midrule
+Normal (0) & 0.97 & 0.92 & 0.95 \\
+Abnormal (1) & 0.97 & \textbf{0.99} & 0.98 \\
+\midrule
+\textbf{Accuracy} & \multicolumn{3}{c}{\textbf{97.05\%}} \\
+\bottomrule
+\end{tabular}
+\label{tab:results}
+\end{center}
+\end{table}
+
+\subsection{Result Analysis}
+The model achieved an overall accuracy of 97.05\%. Most notably, the recall for the Abnormal class is 99\%, indicating that the system is highly reliable in detecting cardiac abnormalities.
+
+\subsection{Confusion Matrix}
+Fig. \ref{fig:confusion} presents the Confusion Matrix. The diagonal elements represent the number of points for which the predicted label is equal to the true label.
+
+The matrix shows that out of 2,102 abnormal samples (Class 1), the model correctly classified almost all of them, with very few False Negatives. This demonstrates the model's robustness for medical screening purposes where sensitivity is paramount.
+
+% --- FIGURE 2: CONFUSION MATRIX ---
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.8\linewidth]{confusion_matrix.png}}
+\caption{Confusion Matrix of the Random Forest Model. The high density in the bottom-right cell confirms the model's ability to correctly identify Abnormal heartbeats.}
+\label{fig:confusion}
+\end{figure}
+% ----------------------------------
+
+\section{Conclusion}
+The proposed Random Forest model effectively classifies ECG signals with high accuracy. Future work will focus on using Deep Learning techniques to further improve the detection of Normal cases.
 
 \end{document}
