@@ -1,0 +1,82 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+\begin{document}
+
+\title{ECG Signal Classification for Arrhythmia Detection using Random Forest}
+
+\author{\IEEEauthorblockN{Tran Huy Quan - 22BA13260}
+\textit{University of Science and Technology of Ha Noi}\\
+}
+
+\maketitle
+
+\section{Introduction}
+An electrocardiogram (ECG) is the standard tool for checking cardiovascular health by monitoring the electrical activity of the heart. However, manually analyzing these signals is very time-consuming and prone to errors. That is why automated systems are becoming essential to help doctors quickly detect heart problems such as myocardial infarction. In this study, we used the PTB Diagnostic ECG Database to build a model that can differentiate between normal and abnormal heart rhythms. By using the Random Forest method, our goal was to make the diagnosis more accurate and reliable.
+
+\section{Dataset Description}
+This study utilizes a subset of the PTB Diagnostic ECG Database, comprising pre-processed heartbeat signals divided into two distinct categories:
+\begin{itemize}
+    \item \textbf{Normal Class:} 4,046 samples.
+    \item \textbf{Abnormal Class:} 10,506 samples.
+\end{itemize}
+
+Each sample encapsulates a single heartbeat represented by 188 features. As illustrated in Fig. \ref{fig:ecg_signal}, there are clear morphological distinctions between the classes. The Normal signal (blue) displays a standard QRS complex, whereas the Abnormal signal (red) exhibits significant deviations and irregularities typically associated with heart problems.
+
+% --- FIGURE 1: ECG SIGNALS ---
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.9\linewidth]{average_ecg_signals.png}}
+\caption{Comparison of Average ECG Signals. The blue waveform represents the Normal heartbeat, contrasting with the red waveform which depicts the Abnormal heartbeat.}
+\label{fig:ecg_signal}
+\end{figure}
+% -----------------------------
+
+\section{Methodology}
+For classification, we used a Random Forest model established with 100 estimators. Because our dataset is unbalanced, we used stratified sampling to split the data into an 80\% training set and a 20\% test set. This step is crucial to ensure that both normal and abnormal heart rates are fairly represented, preventing the model from being biased toward the majority class.
+
+\section{Experimental Results}
+
+\subsection{Performance Metrics}
+The proposed model was evaluated on a held-out test set comprising 2,911 samples. The comprehensive performance metrics are detailed in Table \ref{tab:results}.
+
+\begin{table}[htbp]
+\caption{Performance Results}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\midrule
+Normal (0) & 0.97 & 0.92 & 0.95 \\
+Abnormal (1) & 0.97 & \textbf{0.99} & 0.98 \\
+\midrule
+\textbf{Accuracy} & \multicolumn{3}{c}{\textbf{97.05\%}} \\
+\bottomrule
+\end{tabular}
+\label{tab:results}
+\end{center}
+\end{table}
+
+\subsection{Result Analysis}
+Our results show that the model is highly reliable, achieving an overall accuracy of 97.05\%. Most notably, the recall rate reached 99\% for the Abnormal group. In the healthcare field, this figure is crucial because it signifies that the system is very good at detecting positive cases, significantly reducing the risk of missing a dangerous heart condition.
+
+\subsection{Confusion Matrix}
+Fig. \ref{fig:confusion} shows the Confusion Matrix, which supports these findings. As seen in the chart, the model made very few mistakes. Specifically, out of 2,102 abnormal samples (Class 1), it correctly identified almost all of them, leaving a very small number of False Negatives. This makes the model a strong candidate for medical screening, where catching every potential issue is the main goal.
+
+% --- FIGURE 2: CONFUSION MATRIX ---
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.8\linewidth]{confusion_matrix.png}}
+\caption{Confusion Matrix of the Random Forest Model. The density in the bottom-right cell confirms the model's high sensitivity in detecting Abnormal heartbeats.}
+\label{fig:confusion}
+\end{figure}
+% ----------------------------------
+
+\section{Conclusion}
+In this paper, we propose a Random Forest model for electrocardiogram (ECG) classification with 97.05\% accuracy. With its high ability to identify abnormalities, this system shows real potential in supporting clinical decisions. In the future, we plan to use Deep Learning techniques to improve the detection of normal cases and make the model even more robust.
+
+\end{document}
