@@ -1,0 +1,159 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\title{Fetal Head Circumference Prediction from Ultrasound Images}
+\author{22AB13260 - Tran Huy Quan}
+
+\begin{document}
+
+\maketitle
+
+% ============================================
+\section{Introduction}
+% ============================================
+
+In this lab, I build a model to predict the head circumference (HC) of a fetus from ultrasound images. This is an important measurement that helps doctors monitor fetal development.
+
+\textbf{Objective:} Build a deep learning model to predict HC (in mm) with accuracy measured by MAE (Mean Absolute Error).
+
+% ============================================
+\section{Dataset}
+% ============================================
+
+\subsection{Data Description}
+The dataset consists of fetal ultrasound images with additional information:
+
+\begin{itemize}
+    \item \textbf{Training set:} 999 images with HC labels
+    \item \textbf{Test set:} 335 images to predict
+    \item \textbf{Additional info:} Pixel size (mm) for each image
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\caption{Head Circumference Statistics (mm)}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Minimum & 44.3 \\
+Mean & 166.2 \\
+Maximum & 346.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Data Distribution}
+Figure 1 shows the distribution of HC and pixel size in the training set. HC is mostly concentrated in the 150-200 mm range, corresponding to mid-pregnancy.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.48\textwidth]{figure/fig_distribution}
+\caption{Distribution of HC and Pixel Size in the training set}
+\end{figure}
+
+\subsection{Sample Images}
+Figure 2 displays sample ultrasound images with different HC values. We can see that as HC increases, the head circle in the image becomes visibly larger.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.48\textwidth]{figure/fig_samples}
+\caption{Sample ultrasound images with HC values from 44mm to 178mm}
+\end{figure}
+
+% ============================================
+\section{Methods}
+% ============================================
+
+\subsection{Data Preprocessing}
+Images are processed as follows:
+\begin{itemize}
+    \item Convert to grayscale
+    \item Resize to 128×128 pixels
+    \item Normalize pixel values to [0, 1]
+    \item Split data: 80\% training, 20\% validation
+\end{itemize}
+
+\subsection{Model Architecture}
+I use a CNN (Convolutional Neural Network) with the following structure:
+
+\begin{enumerate}
+    \item \textbf{Conv layer 1:} 32 filters, size 3×3
+    \item \textbf{Conv layer 2:} 64 filters, size 3×3
+    \item \textbf{Conv layer 3:} 128 filters, size 3×3
+    \item \textbf{Global Average Pooling:} Reduce feature size
+    \item \textbf{Dense layer:} 64 units + 30\% Dropout
+    \item \textbf{Concatenate with Pixel Size} 
+    \item \textbf{Dense layer:} 32 units
+    \item \textbf{Output:} 1 value (predicted HC)
+\end{enumerate}
+
+The model has approximately 130,000 parameters.
+
+\subsection{Training}
+\begin{itemize}
+    \item \textbf{Loss function:} MAE (Mean Absolute Error)
+    \item \textbf{Optimizer:} Adam
+    \item \textbf{Epochs:} 50 (early stopping if no improvement)
+    \item \textbf{Batch size:} 32
+\end{itemize}
+
+% ============================================
+\section{Results}
+% ============================================
+
+\subsection{Training Process}
+Figure 3 shows that MAE decreases over training time. The model stopped at epoch 43 due to no further improvement.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.45\textwidth]{figure/fig_training}
+\caption{MAE on training and validation sets over epochs}
+\end{figure}
+
+\subsection{Validation Results}
+
+\begin{table}[h]
+\centering
+\caption{Evaluation Results}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Validation MAE & \textbf{48.79 mm} \\
+Validation samples & 200 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The average error is about 49mm, meaning the model predicts reasonably well with acceptable error for basic medical data.
+
+\subsection{Actual vs Predicted Comparison}
+Figure 4 compares actual and predicted HC values. Points close to the red diagonal line indicate good predictions. The model predicts well for medium HC values (150-200mm), but has larger errors for extreme values.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.4\textwidth]{figure/fig_scatter}
+\caption{Comparison of actual and predicted HC on validation set}
+\end{figure}
+
+\subsection{Test Set Predictions}
+The model successfully predicted HC for 335 images in the test set. Results are saved in \texttt{test\_predictions.csv}.
+
+% ============================================
+\section{Conclusion}
+% ============================================
+
+In this lab, I have:
+
+\begin{enumerate}
+    \item Explored fetal ultrasound image data
+    \item Built a CNN model to predict head circumference
+    \item Achieved MAE of about 49mm on validation set
+    \item Applied the model to predict on test set
+\end{enumerate}
+
+\end{document}
