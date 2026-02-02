@@ -1,0 +1,90 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{Report: Covid-19 Infection Segmentation on Chest X-rays}
+
+\author{\IEEEauthorblockN{Student Name}}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+The Covid-19 pandemic has placed a tremendous burden on global healthcare systems. One of the primary diagnostic tools for assessing the severity of the disease is the chest X-ray, which allows doctors to visualize the extent of lung infection. However, manually identifying and tracing these infection areas is a time-consuming and subjective process, especially when radiologists are overwhelmed with a high volume of patients.
+
+The goal of this project is to automate this process using Artificial Intelligence (AI). I aim to build a deep learning model that can automatically detect and segment (draw outlines around) infected areas on chest X-rays. This tool acts like a digital assistant that can "color in" the sick parts of the lung, helping doctors to diagnose patients faster and providing a consistent measurement of how much of the lung is affected.
+
+\section{Methodology}
+
+To achieve this goal, I followed a standard workflow involving data preparation, model selection, and training.
+
+\subsection{Dataset Description}
+I utilized a specialized dataset of chest X-rays that is divided into training and testing sets. This separation ensures that we can teach the model on one set of data and then fairly evaluate its performance on completely new images. Each sample in the dataset consists of two parts:
+\begin{enumerate}
+    \item \textbf{Original X-ray}: A standard grayscale image of the patient's chest, showing the lungs, heart, and ribs.
+    \item \textbf{Infection Mask}: A binary (black and white) image created by medical experts. In these masks, white pixels indicate the presence of Covid-19 infection, while black pixels represent healthy tissue. usage of these masks allows the computer to have an "answer key" to learn from.
+\end{enumerate}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\linewidth]{fig1_samples.png}
+    \caption{Dataset Samples. Left: Original X-ray. Middle: The infection mask showing the disease area. Right: A red overlay combining both to highlight the infection location.}
+    \label{fig:samples}
+\end{figure}
+
+As seen in Figure \ref{fig:samples}, the infection can appear as small patches or cover large portions of the lung, which makes the task challenging.
+
+\subsection{Model Architecture: U-Net}
+For this task, I chose the **U-Net** architecture. This is a very popular neural network design specifically coined for medical image analysis. Its name comes from its U-shape structure, which has two main parts:
+\begin{itemize}
+    \item \textbf{Encoder (The Downward Path)}: This part compresses the image to capture the "context" or the general features of what is present (e.g., is there an opacity?). It works like a traditional classification network.
+    \item \textbf{Decoder (The Upward Path)}: This part expands the features back to the original image size to determine the precise "location" of those features.
+\end{itemize}
+By combining these two paths, U-Net can understand both *what* the infection looks like and exactly *where* it is located.
+
+\subsection{Training Process}
+I trained the model for 5 epochs. To guide the learning process, I used the **Dice Loss** function. Unlike standard accuracy, which just counts correct pixels, Dice Loss measures the *overlap* between the model's prediction and the expert's ground truth. This is crucial for segmentation because we want the shapes to match as closely as possible. I also used the Adam optimizer, which helps the model adjust its internal parameters efficiently to minimize errors.
+
+\section{Results}
+
+\subsection{Training Progress}
+The training process showed consistent improvement. Figure \ref{fig:training} displays the learning curves over the 5 epochs.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{fig2_training.png}
+    \caption{Training Curves. Left: The Loss decreases, meaning errors are reducing. Right: The Dice Score increases, meaning the overlap with the ground truth is improving.}
+    \label{fig:training}
+\end{figure}
+
+As we can see, the Loss (error rate) dropped significantly, and the Dice Score (accuracy of overlap) rose steadily. This indicates that the model was successfully learning to interpret the X-ray images and was not just memorizing the data.
+
+\subsection{Visual Predictions}
+To truly validate the model, I tested it on unseen images. The visual results are highly encouraging.
+
+In Figure \ref{fig:predictions}, the model demonstrates its ability to identify large, clear areas of infection. The "Prediction (Binary)" column shows the AI's output, which closely mirrors the "Ground Truth" provided by doctors.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{fig3_predictions.png}
+    \caption{Prediction Results 1. The model correctly identifies the location and general shape of the infection in both lungs.}
+    \label{fig:predictions}
+\end{figure}
+
+Figure \ref{fig:predictions_extra} shows more complex cases. Even when the infection is subtle or has an irregular shape, the model is able to segment it with reasonable accuracy.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{fig4_predictions_extra.png}
+    \caption{Prediction Results 2. Additional examples showing the model's robustness in handling different infection patterns.}
+    \label{fig:predictions_extra}
+\end{figure}
+
+\section{Conclusion}
+In this project, I successfully implemented a U-Net model to automate the segmentation of Covid-19 infections on chest X-rays. Despite the complexity of medical images, the model learned to produce accurate segmentation masks that closely resemble human annotations.
+
+This technology has great potential to assist radiologists by providing a second opinion and automating the tedious task of manual segmentation. Future work could involve training on larger datasets and integrating this tool into real-world clinical workflows to support the fight against respiratory diseases.
+
+\end{document}
